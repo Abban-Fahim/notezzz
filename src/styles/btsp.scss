@@ -1,0 +1,14 @@
+@import "variables";
+
+$theme-colors: (
+  "primary": $primary,
+  "success": $success,
+  "danger": $danger,
+  "secondary": $secondary,
+  "light": $light,
+  "dark": $dark,
+);
+
+$spinner-width: 5rem;
+
+@import "node_modules/bootstrap/scss/bootstrap.scss";

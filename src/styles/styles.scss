@@ -1,0 +1,124 @@
+@import "_variables.scss";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css");
+
+* {
+  font-family: "ABeeZee", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: $light;
+  overflow: auto;
+}
+
+h1 {
+  font-family: "Mali", cursive;
+  font-weight: 700;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 25px 10px 10px;
+  background-color: $dark;
+  color: $light;
+  .bi {
+    color: $primary;
+  }
+}
+
+.create-btn {
+  border-radius: 50% !important;
+  padding: 10px 10px 10px 13px !important;
+  img {
+    width: 34px;
+  }
+  width: max-content;
+}
+
+.color-btn {
+  border-radius: 50% !important;
+  padding: 10px !important;
+  svg {
+    width: 34px;
+  }
+}
+
+.notes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.empty-svg {
+  width: 35vw;
+}
+
+.note {
+  border: 2px solid black;
+  border-radius: 20px;
+  padding: 7px;
+  word-wrap: break-word;
+  position: relative;
+  p:first-child {
+    font-weight: bold;
+    font-size: 22px;
+  }
+  .delete {
+    background-color: transparent;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 18px;
+  }
+}
+
+.create-form {
+  padding: 10px;
+  z-index: 1000;
+  background-color: $dark;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  bottom: 10px;
+  right: 10px;
+  position: fixed;
+  border-radius: 20px;
+  textarea {
+    resize: none;
+    height: 200px;
+    border-radius: 20px;
+    padding: 6px;
+    border: none;
+  }
+  input {
+    padding: 6px;
+    border-radius: 20px;
+    border: none;
+  }
+  input,
+  textarea,
+  button {
+    margin: 3px;
+    padding: 3px;
+  }
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  .bi.bi-arrows-move {
+    color: $light;
+    font-size: 24px;
+    flex-grow: 1;
+    text-align: center;
+  }
+}
+
+.shadow {
+  box-shadow: 0px 0px 19px -1px #000000a8;
+  border: 2px solid $primary;
+}

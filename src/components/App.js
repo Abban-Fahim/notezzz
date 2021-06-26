@@ -3,6 +3,7 @@ import { Switch, useHistory, Route } from "react-router-dom";
 import { auth } from "../firebase";
 import Auth from "./Auth";
 import Notes from "./Notes";
+import AccountPage from "./AccountPage";
 
 function App() {
   const history = useHistory();
@@ -23,6 +24,7 @@ function App() {
     <>
       <Switch>
         <Route path="/login" children={<Auth setUser={setUser} />} />
+        <Route path="/account" children={<AccountPage />} />
         <Route
           path="/"
           children={<Notes setUser={setUser} user={userDetails} />}
