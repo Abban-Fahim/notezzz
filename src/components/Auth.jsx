@@ -5,8 +5,8 @@ export const User = null;
 
 const Auth = ({ setUser }) => {
   const [form, setForm] = useState({
-    email: "lloydtechno58@gmail.com",
-    password: "hello123",
+    email: "",
+    password: "",
   });
   const [isRegistered, setRegistered] = useState(true);
   const [err, setErr] = useState("");
