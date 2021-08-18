@@ -4,12 +4,13 @@ import App from "./components/App";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./styles/styles.scss";
 import "./styles/btsp.scss";
+import { ThemeProvider } from "./utilities/ThemeContext";
 
 ReactDOM.render(
-  <Router>
-    <React.StrictMode>
+  <ThemeProvider>
+    <Router>
       <App />
-    </React.StrictMode>
-  </Router>,
+    </Router>
+  </ThemeProvider>,
   document.getElementById("root")
 );

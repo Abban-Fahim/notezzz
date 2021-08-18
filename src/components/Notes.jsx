@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { auth, db } from "../firebase";
-import icon from "./../styles/create-icon.png";
+import { auth, db } from "./../utilities/firebase";
+import icon from "./../media/create-icon.png";
 import Draggable from "react-draggable";
-import colorIcon from "./../styles/color-picker-icon.jsx";
+import colorIcon from "./../media/color-picker-icon.jsx";
 import { CirclePicker } from "react-color";
-import Empty from "./Empty";
+import Empty from "./../media/Empty";
 import shadeColor from "../utilities/shade-color";
+import NoteModal from "./Note-modal";
+import { Modal } from "react-bootstrap";
+import { ThemeContext } from "../utilities/ThemeContext";
 
 const Notes = ({ setUser, user }) => {
   const [notes, setNotes] = useState([]);
@@ -20,9 +23,14 @@ const Notes = ({ setUser, user }) => {
   const [loading, setLoading] = useState(true);
   const [formCollapsed, setCollapsed] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [noteSelected, setNoteSelected] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [modal, setModal] = useState({});
+
+  const { theme, toggleTheme } = React.useContext(ThemeContext);
 
   useEffect(() => {
-    if (user.email !== undefined) {
+    if (user.uid !== undefined) {
       getNotes();
     } else {
       console.log("No user!");
@@ -42,7 +50,7 @@ const Notes = ({ setUser, user }) => {
 
   function getNotes() {
     setLoading(true);
-    db.collection(user.email)
+    db.collection(user.uid)
       .get()
       .then((docs) => {
         if (docs.empty) {
@@ -69,7 +77,7 @@ const Notes = ({ setUser, user }) => {
 
   function createNote() {
     setLoading(true);
-    db.collection(user.email)
+    db.collection(user.uid)
       .add({
         title: newNote.title,
         body: newNote.body,
@@ -77,6 +85,10 @@ const Notes = ({ setUser, user }) => {
       })
       .then((doc) => {
         setLoading(false);
+        setNewNote({
+          title: "",
+          body: "",
+        });
         setNotes((prev) => {
           let bruh = [...prev, { id: doc.id, ...newNote, color: color }];
           return bruh;
@@ -89,7 +101,7 @@ const Notes = ({ setUser, user }) => {
 
   function deleteNote(noteToDelete) {
     setLoading(true);
-    db.collection(user.email)
+    db.collection(user.uid)
       .doc(noteToDelete)
       .delete()
       .then(() => {
@@ -99,6 +111,33 @@ const Notes = ({ setUser, user }) => {
         setLoading(false);
       })
       .catch((err) => console.error(err));
+  }
+
+  function openDeletingModal(noteId) {
+    setModalVisible(true);
+    setModal({
+      title: "Confirm deletion",
+      body: "Are you sure you want to delete this note, cuz it will be gone forever. A very, very long time!",
+      footer: () => (
+        <>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              deleteNote(noteId);
+              setModalVisible(false);
+            }}
+          >
+            Delete
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setModalVisible(false)}
+          >
+            Cancel
+          </button>
+        </>
+      ),
+    });
   }
 
   function signOut() {
@@ -112,8 +151,6 @@ const Notes = ({ setUser, user }) => {
       .catch((err) => console.error(err));
   }
 
-  function updateNotes() {}
-
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vw-100 vh-100">
@@ -125,16 +162,56 @@ const Notes = ({ setUser, user }) => {
   } else {
     return (
       <>
+        {isModalVisible ? (
+          <Modal
+            animation
+            backdrop="static"
+            show={true}
+            onHide={() => setModalVisible(false)}
+          >
+            <Modal.Header>
+              <Modal.Title>{modal.title}</Modal.Title>
+              <button
+                className="btn-close"
+                onClick={() => setModalVisible(false)}
+              ></button>
+            </Modal.Header>
+            <Modal.Body>{modal.body}</Modal.Body>
+            <Modal.Footer>{<modal.footer />}</Modal.Footer>
+          </Modal>
+        ) : null}
+        {noteSelected ? (
+          <NoteModal
+            noteToBeUpdated={noteSelected}
+            setSelectedNote={setNoteSelected}
+            user={user}
+            setNotes={setNotes}
+            notes={notes}
+          />
+        ) : null}
         <header>
           <h1>
             <i
-              class="bi bi-person-circle"
+              className="bi bi-person-circle"
               onClick={() => {
                 history.push("/account");
               }}
             ></i>
             Your Notes
           </h1>
+          <button onClick={toggleTheme} className="btn btn-success">
+            <i
+              className={`bi bi-${
+                theme === "light" ? "sun-fill" : "moon-fill"
+              }`}
+            ></i>
+          </button>
+          <button
+            onClick={() => history.push("/help")}
+            className="btn btn-primary"
+          >
+            <i className="bi bi-info-circle"></i>
+          </button>
           <button className="btn btn-danger" onClick={signOut}>
             Logout
           </button>
@@ -149,7 +226,7 @@ const Notes = ({ setUser, user }) => {
         >
           <div className={dragging ? "create-form shadow" : "create-form"}>
             <div className="controls">
-              <i class="bi bi-arrows-move"></i>
+              <i className="bi bi-arrows-move"></i>
               <button
                 className="btn btn-dark"
                 onClick={() =>
@@ -184,6 +261,8 @@ const Notes = ({ setUser, user }) => {
                     <img src={icon} alt="create" />
                   </button>
                   <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
                     onClick={() =>
                       colorSelection ? setSelection(false) : setSelection(true)
                     }
@@ -215,7 +294,6 @@ const Notes = ({ setUser, user }) => {
             )}
           </div>
         </Draggable>
-
         {notes.length < 1 ? (
           <div
             className="notes"
@@ -235,24 +313,37 @@ const Notes = ({ setUser, user }) => {
               return (
                 <div
                   key={num}
-                  className="col-md-4 col-lg-3 col-sm-6"
+                  className="col-md-4 col-lg-3 col-sm-6 col-12"
                   style={{ padding: "10px" }}
                 >
                   <div
                     className="note"
                     style={{
-                      backgroundColor: note.color,
-                      border: `3px solid ${shadeColor(note.color, -40)}`,
+                      backgroundColor:
+                        theme === "light"
+                          ? note.color
+                          : shadeColor(note.color, -50),
+                      border: `3px solid ${
+                        theme === "light"
+                          ? shadeColor(note.color, -40)
+                          : note.color
+                      }`,
+                    }}
+                    onDoubleClick={() => {
+                      setNoteSelected(note);
                     }}
                   >
                     <p>{note.title}</p>
-                    <p>{note.body}</p>
+                    <p dangerouslySetInnerHTML={{ __html: note.body }} />
                     <button
                       className="delete btn"
                       style={{
-                        color: shadeColor(note.color, -40),
+                        color:
+                          theme === "light"
+                            ? shadeColor(note.color, -40)
+                            : note.color,
                       }}
-                      onClick={() => deleteNote(note.id)}
+                      onClick={() => openDeletingModal(note.id)}
                     >
                       <i className="bi bi-trash-fill"></i>
                     </button>
