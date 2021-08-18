@@ -1,0 +1,22 @@
+[
+  [
+    "Create a note",
+    "You can create a note using the draggable form on the bottom left. This form can be draggged around by using the arrows on the top or any empty space. The color picking icon can be used to set the color of the note before creating it. You can also minimise the the draggable form by using the dash/hypen button on it's top right.",
+    "sticky"
+  ],
+  [
+    "Editing a note",
+    "You can edit a note by double clicking it. On the popup form, press the check button to confirm and save the editing it. You can cancel your editing using the X button on the top right or pressing Escape.",
+    "pencil-square"
+  ],
+  [
+    "Deleting a note",
+    "You can delete a note by clicking on the delete icon on the note.",
+    "trash"
+  ],
+  [
+    "Changing account settings",
+    "You can change account settings using the account icon on the top left of the main screen. There, your theme, download all you notes, delete your account, and much more.",
+    "person"
+  ]
+]
