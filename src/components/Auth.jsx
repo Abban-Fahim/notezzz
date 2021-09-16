@@ -82,7 +82,7 @@ const Auth = ({ setUser }) => {
     <>
       {err ? (
         <div id="err" className="alert alert-danger d-flex align-items-center">
-          <i className="bi bi-exclamation-circle-fill"/>
+          <i className="bi bi-exclamation-circle-fill" />
           {err}
         </div>
       ) : null}
@@ -104,9 +104,10 @@ const Auth = ({ setUser }) => {
             placeholder="Enter your email"
             value={form.email}
             onChange={updateForm}
+            required
           />
           <input
-            type={passwordVisible ? "text" : "password"}
+            type="password"
             name="password"
             placeholder="Enter a password"
             value={form.password}
@@ -115,7 +116,7 @@ const Auth = ({ setUser }) => {
           />
           {isRegistered ? null : (
             <input
-              type={passwordVisible ? "text" : "password"}
+              type="password"
               name="confirmPassword"
               placeholder="Confirm your password"
               value={form.confirmPassword}
@@ -148,7 +149,7 @@ const Auth = ({ setUser }) => {
                   .catch((err) => setErr(err));
               }}
             >
-              <i className="bi bi-google"/>
+              <i className="bi bi-google" />
             </button>
             <button
               type="button"

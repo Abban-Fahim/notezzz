@@ -152,12 +152,19 @@ header {
     font-weight: bold;
     font-size: 22px;
   }
-  .delete {
-    background-color: transparent;
+  &:hover .note-btns {
+    display: block;
+  }
+  .note-btns {
+    display: none;
     position: absolute;
     top: 3px;
     right: 5px;
     font-size: 18px;
+    border-radius: inherit;
+    .btn {
+      color: inherit;
+    }
   }
 }
 
@@ -194,6 +201,17 @@ header {
     &::placeholder {
       color: $light;
     }
+  }
+}
+
+#note-page {
+  max-width: 80vw;
+  min-width: 0;
+}
+
+@media (max-width: 576px) {
+  #note-page {
+    max-width: 100vw;
   }
 }
 

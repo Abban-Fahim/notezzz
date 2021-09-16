@@ -6,6 +6,7 @@ import Notes from "./Notes";
 import AccountPage from "./AccountPage";
 import HelpPage from "./HelpPage";
 import { ThemeContext } from "../utilities/ThemeContext";
+import NotePage from "./NotePage";
 
 function App() {
   const history = useHistory();
@@ -14,13 +15,15 @@ function App() {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        setDetails(user);
-        if (window.location.pathname === "/login") {
-          history.push("/");
+      if (window.location.pathname.slice(0, 5) !== "/note") {
+        if (user) {
+          setDetails(user);
+          if (window.location.pathname === "/login") {
+            history.push("/");
+          }
+        } else {
+          history.push("/login");
         }
-      } else {
-        history.push("/login");
       }
     });
   }, [user, history]);
@@ -28,6 +31,7 @@ function App() {
   return (
     <div id={React.useContext(ThemeContext).theme}>
       <Switch>
+        <Route path="/note/:userID/:noteID" children={<NotePage />} />
         <Route path="/login" children={<Auth setUser={setUser} />} />
         <Route
           path="/account"

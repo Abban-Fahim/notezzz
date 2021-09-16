@@ -335,18 +335,48 @@ const Notes = ({ setUser, user }) => {
                   >
                     <p>{note.title}</p>
                     <p dangerouslySetInnerHTML={{ __html: note.body }} />
-                    <button
-                      className="delete btn"
+                    <div
+                      className="note-btns"
                       style={{
                         color:
                           theme === "light"
                             ? shadeColor(note.color, -40)
                             : note.color,
+                        backgroundColor:
+                          theme === "light"
+                            ? note.color
+                            : shadeColor(note.color, -50),
                       }}
-                      onClick={() => openDeletingModal(note.id)}
                     >
-                      <i className="bi bi-trash-fill"></i>
-                    </button>
+                      <button
+                        className="btn"
+                        onClick={() => openDeletingModal(note.id)}
+                      >
+                        <i className="bi bi-trash-fill"></i>
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={() =>
+                          window.open(
+                            `/note/${user.uid}/${note.id}/`,
+                            note.title,
+                            "height=500,width=500"
+                          )
+                        }
+                      >
+                        <i class="bi bi-box-arrow-up-right"></i>
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={() => {
+                          navigator.clipboard.writeText(
+                            `${window.location.origin}/note/${user.uid}/${note.id}/`
+                          );
+                        }}
+                      >
+                        <i class="bi bi-share-fill"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
